@@ -468,60 +468,60 @@
   $(".show-image").hide();
 
   $(document).ready(function () {
-    // var vpnOn = false;
-    // var confirmButton;
+    var vpnOn = false;
+    var confirmButton;
 
-    // async function checkIPAddress() {
-    //     try {
-    //         const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
-    //         const data = await response.json();
-    //         console.log('Country:', data.country);
-    //         if (data.country === 'MM') {
-    //             console.log('Open VPN');
-    //             Swal.fire({
-    //                 title: 'Please Open VPN!',
-    //                 icon: 'warning',
-    //                 confirmButtonText: 'OK',
-    //                 showCancelButton: false,
-    //                 allowOutsideClick: () => false,
-    //                 didOpen: () => {
-    //                     confirmButton = Swal.getConfirmButton();
-    //                     confirmButton.disabled = true;
-    //                 }
-    //             }).then((result) => {
-    //                 if (result.isConfirmed) {
-    //                     console.log('OK button clicked');
-    //                 }
-    //             });
-    //         } else {
-    //             console.log('OK');
-    //             updateVPNStatus(); // Call updateVPNStatus when the country is not Myanmar
-    //         }
-    //     } catch (error) {
-    //         console.error('Error checking IP address:', error);
-    //     }
-    // }
+    async function checkIPAddress() {
+        try {
+            const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
+            const data = await response.json();
+            console.log('Country:', data.country);
+            if (data.country === 'MM') {
+                console.log('Open VPN');
+                Swal.fire({
+                    title: 'Please Open VPN!',
+                    icon: 'warning',
+                    confirmButtonText: 'OK',
+                    showCancelButton: false,
+                    allowOutsideClick: () => false,
+                    didOpen: () => {
+                        confirmButton = Swal.getConfirmButton();
+                        confirmButton.disabled = true;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log('OK button clicked');
+                    }
+                });
+            } else {
+                console.log('OK');
+                updateVPNStatus(); // Call updateVPNStatus when the country is not Myanmar
+            }
+        } catch (error) {
+            console.error('Error checking IP address:', error);
+        }
+    }
 
-    // async function updateVPNStatus() {
-    //     try {
-    //         const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
-    //         const data = await response.json();
-    //         if (data.country === 'MM') {
-    //             console.log('Country is still Myanmar, waiting...');
-    //         } else {
-    //             vpnOn = true;
-    //             // if (vpnOn == false) {
-    //                 confirmButton = Swal.getConfirmButton();
-    //                 confirmButton.disabled = false;
-    //             // }
-    //         }
-    //     } catch (error) {
-    //         console.error('Error updating VPN status:', error);
-    //     }
-    // }
+    async function updateVPNStatus() {
+        try {
+            const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
+            const data = await response.json();
+            if (data.country === 'MM') {
+                console.log('Country is still Myanmar, waiting...');
+            } else {
+                vpnOn = true;
+                // if (vpnOn == false) {
+                    confirmButton = Swal.getConfirmButton();
+                    confirmButton.disabled = false;
+                // }
+            }
+        } catch (error) {
+            console.error('Error updating VPN status:', error);
+        }
+    }
 
-    // const intervalId = setInterval(updateVPNStatus, 5000);
-    // checkIPAddress();
+    const intervalId = setInterval(updateVPNStatus, 5000);
+    checkIPAddress();
 
     var path;
     window.addEventListener("load", function () {
