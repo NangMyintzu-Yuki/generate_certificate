@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta
+      property="og:image"
+      content="https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
+      id="ogImage"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
+
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ asset('assets/images/favicon.ico') }}"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.min.js"
+      integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+      integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"
+      integrity="sha512-Ysw1DcK1P+uYLqprEAzNQJP+J4hTx4t/3X2nbVwszao8wD+9afLjBQYjz7Uk4ADP+Er++mJoScI42ueGtQOzEA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.6/sweetalert2.css"
+      integrity="sha512-n1PBkhxQLVIma0hnm731gu/40gByOeBjlm5Z/PgwNxhJnyW1wYG8v7gPJDT6jpk0cMHfL8vUGUVjz3t4gXyZYQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.6/sweetalert2.min.js"
+      integrity="sha512-RJQj9OXEQyrPPOxSPNIXcRi61EGHulbS/SzuXw1nAyvBwYE6782rxLm/G6OKB51igh5eBoT8AUU2+K1gJxXatw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <style type="text/css">
+    body {
+      font-family: "HelveticaNeue Medium", "Oppo-2019044a-130", "W49ArtHouse",
+        sans-serif !important;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .mainContainer {
+      height: calc(100vh - 56px) !important;
+    }
+
+    .preview {
+      text-align: center;
+      overflow: hidden;
+      width: 160px;
+      height: 160px;
+      margin: 10px;
+      border: 1px solid red;
+    }
+
+    .image-container {
+      /* portrait */
+      /* width: 244px;
+        height: 324px; */
+      /* landscape */
+      width: 460px;
+      height: 240px;
+      overflow: hidden;
+      margin: auto;
+      text-align: center;
+    }
+
+    #certificate {
+      /* background-image: url('assets/images/certificate.jpg'); */
+      background-image: url("https://smilewithoppo.com/assets/images/certificate_landscape.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      width: auto;
+      height: 100%;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .wrapper {
+      text-align: center;
+
+      h1 {
+        font-weight: 500;
+        font-family: "HelveticaNeue Medium", sans-serif;
+        color: #fff;
+      }
+    }
+
+    .shareIcon {
+      display: inline !important;
+      fill: #ffffff !important;
+    }
+
+    .shareCertificate:hover .shareIcon {
+      fill: #000000 !important;
+    }
+  </style>
+
+  <body
+    class="font-sans antialiased bg-gray-300 w-screen p-0 m-0 h-screen overflow-hidden"
+    id="content"
+  >
+    <div
+      id="loading"
+      class="h-full w-full font-sans bg-[#7BEFA7] flex text-center items-center justify-center w-full h-full m-0 p-0 overflow-hidden loadingScreen"
+    >
+      <div class="items-center">
+        <img
+          src="https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
+          alit="Dancing"
+          width="160px"
+        />
+      </div>
+    </div>
+
+    <div class="w-full bg-red-300 h-full mainContainer" id="mainContainer">
+      <canvas id="frame" width="1200" height="628" class="hidden"></canvas>
+
+      <button
+        class="openDialogButton absolute lg:top-[7%] md:top-[7%] sm:top-[8%] top-[8%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#7BEFA7] text-black hover:bg-transparent hover:text-white text-sm border border-sm px-6 py-1 border-[#7BEFA7] hover:border-white rounded-2xl"
+      >
+        Join
+      </button>
+
+      <div
+        id="dialogContainer"
+        class="fixed z-40 inset-0 overflow-y-hidden hidden font-mm3"
+      >
+        <div class="flex items-center justify-center min-h-screen">
+          <div class="fixed inset-0 bg-black opacity-50"></div>
+          <div
+            class="relative bg-white rounded-lg shadow-lg p-10 lg:w-[44%] md:w-[75%] sm:w-[80%]"
+          >
+            <div
+              class="modal-body md:min-h-[400px] sm:min-h-[300px] min-h-[300px]"
+            >
+              <h1
+                class="font-bold mb-6 text-center lg:text-[16px] md:text-[16px] sm:text-[14px] text-[14px] title font-mm3 font-oppo lg:leading-[28px] md:leading-[28px]"
+              >
+                Brighten up your smile
+              </h1>
+              <p
+                class="lg:text-xs md:text-xs sm:text-[10px] text-[10px] text-gray-500 text-center sub_title_1 font-mm3 font-oppo lg:leading-[20px] md:leading-[20px] leading-[20px]"
+              >
+                OPPO Myanmar has established (12) clean-water well donations
+                that extend across the entire nation of Myanmar where water
+                supply is insufficient.
+              </p>
+              <br />
+              <p
+                class="lg:text-xs md:text-xs text-gray-500 sm:text-[10px] text-[10px] text-center sub_title_2 lg:leading-[20px] md:leading-[20px] leading-[20px]"
+              >
+                Just by sharing and admiring a picture of you and your love ones
+                smilling widely, you can join us in contributing to OPPO's 13th
+                clean water well donation.
+              </p>
+              <br />
+              <div class="w-full">
+                <div class="lg:mb-8 md:mb-4 sm:mb-4 mb-4">
+                  <label
+                    for="name"
+                    class="text-left pb-2 text-gray-500 your_name lg:text-xs md:text-xs sm:text-[10px] text-[10px]"
+                    >Your Name</label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    class="name w-full border-0 border-none focus:border-[#ff0000] focus:border-0 focus:outline-none active:border-none active:outline-none hover:border-none hover:outline-none"
+                  />
+                  <div class="bg-teal-500 w-full h-[1px] lineBreak"></div>
+                  <small>
+                    <span class="name_alert text-[8px] text-red-500"></span>
+                  </small>
+                </div>
+                <div class="mb-6">
+                  <label
+                    for="image"
+                    class="text-left lg:text-xs md:text-xs sm:text-[10px] text-[10px] text-gray-500 upload_photo"
+                    >Upload your smile photo (or) selfie</label
+                  >
+                  <div class="flex flex-row justify-baseline mt-2">
+                    <div
+                      class="relative w-12 h-12 bg-gray-200 rounded justify-center flex text-center items-center cursor-pointer chooseImage"
+                    >
+                      +
+                      <input
+                        type="file"
+                        class="beforeImage absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                    </div>
+                    <img
+                      src=""
+                      style="width: 48px; height: 48px"
+                      class="show-image"
+                    />
+                    <div
+                      class="cursor-pointer min-w-28 relative changeImage text-blue-500 lg:text-sm md:text-sm sm:text-[10px] text-[10px] flex text-center items-center"
+                    >
+                      <label
+                        for="image"
+                        class="text-left lg:text-xs md:text-xs sm:text-[10px] text-[10px] text-black cursor-pointer px-3 bg-[#7BEFA8] py-1 ms-1 mt-4 rounded-lg imageChangeBtn browse"
+                        >Change Photo</label
+                      >
+                      <input
+                        type="file"
+                        class="beforeImage openCropDialogButton opacity-0 absolute inset-0 opacity-0 cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                  <small class="image_alert text-red-500 text-[8px]"></small>
+                </div>
+
+                <div class="flex items-center justify-center">
+                  <input
+                    type="checkbox"
+                    id="termAndCondition"
+                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                  />
+                  <label
+                    for="checkbox"
+                    class="ml-2 block lg:text-[10px] md:text-[10px] sm:text-[10px] text-[10px] text-gray-500"
+                    ><span class="term_1"
+                      >Participants in the Brighten up your smile with OPPO
+                      initiative have already acknowledged and comprehended that
+                      their photos might be utilized on the OPPO Myanmar Page.
+                    </span>
+                    <span class="text-red-500">*</span>
+                  </label>
+                </div>
+                <small
+                  class="check_alert text-red-400 text-[10px] ps-6"
+                ></small>
+              </div>
+              <div class="flex items-center justify-center mt-4">
+                <button
+                  class="lg:text-xs md:text-md sm:text-[10px] text-[10px] px-5 py-2 bg-gray-500 text-white rounded-md generate_certificate"
+                  id="generateCertificate"
+                >
+                  Generate Certificate
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- form -->
+        <form
+          action="#"
+          enctype="multipart/form-data"
+          class="createForm"
+          method="POST"
+        >
+          @csrf
+          <input type="hidden" name="name" value="" class="form_name" />
+          <input type="hidden" name="image" value="" class="form_image" />
+          <input type="hidden" name="share" value="" class="form_share" />
+          <input
+            type="hidden"
+            name="generated_image"
+            value=""
+            class="form_generated_image"
+          />
+          <input type="hidden" name="save" value="" class="form_save" />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+
+      <div
+        id="animationModal"
+        class="fixed z-40 inset-0 overflow-y-auto hidden"
+      >
+        <div class="flex items-center justify-center min-h-screen">
+          <div class="fixed inset-0 bg-black opacity-50"></div>
+          <div
+            class="relative bg-white rounded-lg shadow-lg p-10 lg:w-[44%] md:w-[80%] sm:w-[80%]"
+          >
+            <div class="modal-content">
+              <div
+                class="modal-body text-center md:min-h-[400px] sm:min-h-[300px] min-h-[300px] flex justify-center items-center"
+              >
+                <img
+                  src="https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
+                  alt="Uploaded Image"
+                  width="200px"
+                  height="200px"
+                  class="danceAnimation"
+                />
+                <img
+                  src="https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
+                  alt="Uploaded Image"
+                  width="200px"
+                  height="200px"
+                  class="doneAnimation hidden"
+                />
+              </div>
+              <div
+                class="flex lg:flex-row md:flex-col sm:flex-col flex-col justify-center text-center w-full items-center lg:mt-0 md:mt-0 sm:mt-3 mt-3"
+              >
+                <buttn
+                  type="button"
+                  class="lg:flex-1 bg-gray-400 text-white lg:w-32 md:w-60 sm:w-60 w-60 rounded-xl lg:mr-2 py-2 lg:text-[10px] md:text-[10px] sm:text-[10px] text-[10px] save_certificate"
+                  disabled
+                  >Save Certificate</buttn
+                >
+                <button
+                  type="button"
+                  class="lg:flex-1 md:mt-3 lg:mt-0 sm:mt-3 mt-3 bg-gray-400 text-white lg:w-32 md:w-60 sm:w-60 w-60 rounded-xl lg:ml-2 py-2 lg:text-[10px] md:text-[10px] sm:text-[10px] text-[10px]"
+                  disabled
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                    width="16"
+                    height="16"
+                    class="shareIcon"
+                  >
+                    <path
+                      d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3V320c0 17.7 14.3 32 32 32s32-14.3 32-32V109.3l73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 53 43 96 96 96H352c53 0 96-43 96-96V352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V352z"
+                    />
+                  </svg>
+                  &nbsp; <span class="share"> Share </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificate Generate Modal -->
+      <div
+        id="generatedModal"
+        class="fixed z-40 inset-0 overflow-y-auto hidden"
+      >
+        <div class="flex items-center justify-center min-h-screen">
+          <div class="fixed inset-0 bg-black opacity-50"></div>
+          <div
+            class="relative bg-white rounded-lg shadow-lg p-10 lg:w-[44%] md:w-[80%] sm:w-[80%] text-center"
+          >
+            <div class="modal-content">
+              <div
+                class="modal-body text-center md:min-h-[400px] sm:min-h-[300px] min-h-[300px]"
+              >
+                <p
+                  class="lg:text-md md:text-md sm:text-sm text-sm thanks_1 font-mm3 font-oppo mb-5"
+                >
+                  Thank you for participating in this donation!
+                </p>
+                <p
+                  class="lg:text-xs md:text-xs sm:text-[10px] text-[10px] thanks_2 font-oppo font-mm3"
+                >
+                  OPPO Myanmar appreciates your contribution in
+                </p>
+                <p
+                  class="thanks_3 lg:text-sm md:text-sm sm:text-sm text-sm font-mm3 font-oppo"
+                >
+                  Brighten up your smile with OPPO
+                </p>
+                <p
+                  class="thanks_4 lg:text-xs md:text-xs sm:text-[10px] text-[10px] font-mm3 font-oppo"
+                >
+                  campaign
+                </p>
+                <br />
+
+                <div class="image-container" id="image-container">
+                  <div id="certificate" class="certificate relative">
+                    <p
+                      class="absolute top-[36%] left-0 block w-full text-center text-xs text-[#7BEFA8] font-bold pt-1"
+                    >
+                      &nbsp;<span
+                        class="userName text-center text-[#7BEFA8]"
+                      ></span>
+                    </p>
+                    <span
+                      class="absolute top-[47%] left-[58%] number text-[9px] text-[#7BEFA8]"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex lg:flex-row md:flex-col sm:flex-col flex-col justify-center text-center w-full items-center lg:mt-0 md:mt-0 sm:mt-3 mt-3"
+              >
+                <button
+                  type="button"
+                  id="saveCertificate"
+                  class="lg:flex-1 bg-[#7BEFA7] border border-[#7BEFA7] hover:border-black text-black hover:bg-white hover:text-black lg:w-32 md:w-60 sm:w-60 w-60 rounded-xl lg:mr-2 py-2 hover:transition-all duration-300 saveCertificate text-xs save_certificate"
+                >
+                  Save Certificate
+                </button>
+                <button
+                  type="button"
+                  id="shareButton"
+                  class="shareCertificate lg:flex-1 text-white lg:w-32 md:w-60 sm:w-60 w-60 md:mt-3 sm:mt-3 lg:mt-0 mt-3 border border-gray-300 bg-gray-300 hover:bg-white hover:text-black rounded-xl lg:ml-2 py-2 hover:border hover:norder-black hover:transition-all duration-300 text-xs"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                    width="16"
+                    height="16"
+                    class="shareIcon"
+                  >
+                    <path
+                      d="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3V320c0 17.7 14.3 32 32 32s32-14.3 32-32V109.3l73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 53 43 96 96 96H352c53 0 96-43 96-96V352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V352z"
+                    />
+                  </svg>
+                  &nbsp; <span class="share"> Share </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </body>
+</html>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+  integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+<script>
+  var modalIsOpen = false;
+  var currentCount = 22;
+  $(".mainScreen").hide();
+  $("#imageCropDialog").hide();
+  $("#generatedModal").hide();
+  $("#generatedModal").hide();
+  $(".certificate").hide();
+  $("#dialogContainer").hide();
+  $(".show-image").hide();
+  $(".openDialogButton").hide();
+
+  $(document).ready(function () {
+    // var vpnOn = false;
+    // var confirmButton;
+
+    // async function checkIPAddress() {
+    //     try {
+    //         const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
+    //         const data = await response.json();
+    //         console.log('Country:', data.country);
+    //         if (data.country === 'MM') {
+    //             console.log('Open VPN');
+    //             Swal.fire({
+    //                 title: 'Please Open VPN!',
+    //                 icon: 'warning',
+    //                 confirmButtonText: 'OK',
+    //                 showCancelButton: false,
+    //                 allowOutsideClick: () => false,
+    //                 didOpen: () => {
+    //                     confirmButton = Swal.getConfirmButton();
+    //                     confirmButton.disabled = true;
+    //                 }
+    //             }).then((result) => {
+    //                 if (result.isConfirmed) {
+    //                     console.log('OK button clicked');
+    //                 }
+    //             });
+    //         } else {
+    //             console.log('OK');
+    //             updateVPNStatus(); // Call updateVPNStatus when the country is not Myanmar
+    //         }
+    //     } catch (error) {
+    //         console.error('Error checking IP address:', error);
+    //     }
+    // }
+
+    // async function updateVPNStatus() {
+    //     try {
+    //         const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
+    //         const data = await response.json();
+    //         if (data.country === 'MM') {
+    //             console.log('Country is still Myanmar, waiting...');
+    //         } else {
+    //             vpnOn = true;
+    //             // if (vpnOn == false) {
+    //                 confirmButton = Swal.getConfirmButton();
+    //                 confirmButton.disabled = false;
+    //             // }
+    //         }
+    //     } catch (error) {
+    //         console.error('Error updating VPN status:', error);
+    //     }
+    // }
+
+    // const intervalId = setInterval(updateVPNStatus, 5000);
+    // checkIPAddress();
+
+    var path;
+    window.addEventListener("load", function () {
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("mainContainer").style.display = "block";
+      $(".openDialogButton").show("hidden");
+    });
+
+    var shareButton = document.getElementById("shareButton");
+    shareButton.disabled = true;
+    var originalImage = "";
+    var generatedImage = "";
+
+    $(document).on("click", ".choose", function () {
+      $("#dialogContainer").show();
+    });
+    $(document).on("click", ".share", function () {
+      $(".form_share").val(1);
+      $(".createForm").submit();
+    });
+    $(document).on("change", ".beforeImage", function (e) {
+      $(".chooseImage").removeClass("border border-red-400");
+      changeImage(e);
+    });
+    $(document).on("change", ".imageChangeBtn", function (e) {
+      changeImage(e);
+    });
+    $(document).on("change", "#termAndCondition", function () {
+      changeGenerateBtnAction();
+    });
+    $(document).on("click", "#generateCertificate", function () {
+      changeGenerateBtnAction();
+    });
+    $(document).on("keydown", ".name", function () {
+      $(".name_alert").html("");
+    });
+    $(document).on("click", "#shareButton", function () {
+      shareOnFacebook();
+    });
+    $(document).on("click", ".openDialogButton", function () {
+      $("#dialogContainer").show();
+    });
+    $(document).on("click", "#closeDialogButton", function () {
+      $("#dialogContainer").hide();
+    });
+    $(document).on("click", ".saveCertificate", function () {
+      downloadCertificate();
+      setTimeout(function () {
+        $(".saveCertificate").removeClass(
+          "save_certificate bg-[#7BEFA7] text-black"
+        );
+        $(".saveCertificate").addClass("certificate_saved bg-black text-white");
+        setTimeout(function () {
+          $(".shareCertificate").removeClass("bg-gray-300 ");
+          $(".shareCertificate").addClass("bg-[#7BEFA7] ");
+          shareButton.disabled = false;
+          var saveButton = document.getElementById("saveCertificate");
+          saveButton.disabled = true;
+        }, 2000);
+      }, 1000);
+      setTimeout(function () {
+        $(".createForm").submit();
+      }, 1000);
+    });
+    $(document).on("click", ".clickLogo", function () {
+      clickLogoEvent();
+    });
+    $(document).on("click", ".clickFacebook", function () {
+      clickFacebookEvent();
+    });
+    $(document).on("change", ".name", function () {
+      $(".lineBreak").removeClass("bg-red-500");
+      $(".lineBreak").addClass("bg-teal-500");
+    });
+    $(document).on("click", ".changeImage", function () {
+      $(".beforeImage").val("");
+      $(".show-image").attr("src", "#");
+    });
+    $(".createForm").submit(function (e) {
+      e.preventDefault();
+      var formData = new FormData(this);
+      formData.append("name", $(".name").val());
+      formData.append("image", originalImage);
+      formData.append("generated_image", generatedImage);
+      formData.append("save", 1);
+      formData.append("share", $(".form_share").val());
+      $(".saveCertificate").removeClass(
+        "save_certificate bg-[#7BEFA7] text-black"
+      );
+      $(".saveCertificate").addClass("certificate_saved bg-black text-white");
+    });
+
+    function shareOnFacebook() {
+      var imageUrl = "https://smilewithoppo.com/certificate/55_ctr_Test1.png";
+      var currentUrl = window.location.href;
+      document.getElementById("ogImage").setAttribute("content", imageUrl);
+      window.open(
+        "http://www.facebook.com/sharer.php?u=" +
+          encodeURIComponent(imageUrl) +
+          "&picture=" +
+          encodeURIComponent(imageUrl) +
+          "&t=" +
+          encodeURIComponent("title"),
+        "sharer",
+        "toolbar=0,status=0,width=626,height=436"
+      );
+      return false;
+    }
+    // share a link
+    // function shareOnFacebook() {
+    //     var imageUrl = "https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
+    //     if (path.length > 2) {
+    //         path = path.replace(/\s+/g, '');
+    //         imageUrl = `https://smilewithoppo.com/certificate/${path}`;
+    //     }
+    //     console.log('image', imageUrl)
+
+    //     // var shareURL = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(imageUrl);
+    //     // window.open(shareURL, '_blank');
+
+    //     var shareURL = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(imageUrl);
+    //     var link = document.createElement('a');
+    //     link.href = shareURL;
+    //     link.target = '_blank';
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    // }
+
+    // not change meta image
+    // function shareOnFacebook() {
+    //     var deepLink = "https://smilewithoppo.com/website/";
+    //     // var deepLink = "https://appurl.io/OkIzv9U5uy";
+
+    //     if (path.length > 1) {
+    //         path = path.replace(/\s+/g, '');
+    //        var imageUrl = `https://smilewithoppo.com/certificate/${path}`;
+    //        var ogImageMetaTag = document.querySelector('meta[property="og:image"]');
+    //        if (ogImageMetaTag) {
+    //            ogImageMetaTag.setAttribute('content', imageUrl);
+    //        }
+    //     }
+    //     var encodedDeepLink = encodeURIComponent(deepLink);
+    //     var facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" + encodedDeepLink;
+    //     window.open(facebookShareUrl, "_blank");
+    // }
+
+    function changeImage(e) {
+      $(".image_alert").html("");
+      var file = e.target.files;
+      if (file && file.length > 0) {
+        $(".imageChangeBtn").removeClass("browse bg-[#7BEFA8] text-black");
+        $(".imageChangeBtn").addClass("change_photo bg-black text-white");
+        const fileType = file[0]["type"];
+        const validImageTypes = [
+          "image/heic",
+          "image/HEIC",
+          "image/heif",
+          "image/HEIF",
+          "image/jpg",
+          "image/jpeg",
+          "image/png",
+        ];
+        if (!validImageTypes.includes(fileType)) {
+          Swal.fire({
+            title: "Invalid Image!",
+            icon: "warning",
+            confirmButtonText: "OK",
+          });
+          $(this).val("");
+        } else {
+          originalImage = file[0];
+          var url = URL.createObjectURL(file[0]);
+          $(".chooseImage").hide();
+          $(".show-image").show();
+          $(".show-image").attr("src", url);
+          $(".form_image").val(file);
+        }
+      }
+    }
+
+    function changeGenerateBtnAction() {
+      var checkbox = document.getElementById("termAndCondition");
+      var button = document.getElementById("generateCertificate");
+
+      if (checkbox.checked) {
+        button.disabled = false;
+        $("#generateCertificate").removeClass("bg-gray-500 text-white");
+        $("#generateCertificate").addClass("bg-[#7BEFA7] text-black");
+        $("#termAndCondition").removeClass("border-red-500");
+        $("#termAndCondition").addClass("border-gray-300");
+        $(".check_alert").html("");
+
+        $(document).on("click", "#generateCertificate", function () {
+          var language = document.getElementById("language");
+          if ($(".name").val() == "") {
+            $(".lineBreak").removeClass("bg-teal-500");
+            $(".lineBreak").addClass("bg-red-500");
+
+            if (language.checked) {
+              $(".name_alert").html("{{ config('config.mm.name_alert') }}");
+            } else {
+              $(".name_alert").html("{{ config('config.en.name_alert') }}");
+            }
+            // $('.name_alert').html('Please Enter Your Name!');
+          } else if ($(".form_image").val() == "") {
+            $(".chooseImage").addClass("border border-red-400");
+            if (language.checked) {
+              $(".image_alert").html("{{ config('config.mm.image_alert') }}");
+            } else {
+              $(".image_alert").html("{{ config('config.en.image_alert') }}");
+            }
+            // $('.image_alert').html('Please Choose Image');
+          } else {
+            $(".chooseImage").removeClass("border border-red-400");
+            generateCertificate();
+          }
+        });
+      } else {
+        button.disabled = true;
+        $("#generateCertificate").removeClass("bg-[#7BEFA7] text-black");
+        $("#generateCertificate").addClass("bg-gray-500 text-white");
+
+        $("#termAndCondition").removeClass("border-gray-300");
+        $("#termAndCondition").addClass("border-red-500");
+        var language = document.getElementById("language");
+        console.log("language", language.checked);
+        // $('.check_alert').html('Please check "term & condition" box to continue. ')
+        if (language.checked) {
+          $(".check_alert").html("{{ config('config.mm.check_alert') }}");
+        } else {
+          $(".check_alert").html("{{ config('config.en.check_alert') }}");
+        }
+      }
+    }
+
+    function generateCertificate() {
+      $("#dialogContainer").hide();
+      $("#animationModal").show();
+      setTimeout(function () {
+        $(".danceAnimation").addClass("hidden");
+        $(".doneAnimation").removeClass("hidden");
+        setTimeout(function () {
+          $("#animationModal").hide();
+          $("#generatedModal").show();
+          var name = $(".name").val();
+          if (currentCount > 9999) {
+            $(".number").removeClass("text-[9px]");
+            $(".number").addClass("text-[7px]");
+          } else if (currentCount > 99999) {
+            $(".number").removeClass("text-[9px]");
+            $(".number").addClass("text-[5px]");
+          }
+          $(".number").html(currentCount.toLocaleString());
+          $(".userName").html(name);
+          $(".certificate").show();
+        }, 5000);
+      }, 2000);
+    }
+
+    function downloadCertificate() {
+      var canvas = document.getElementById("frame");
+      var ctx = canvas.getContext("2d");
+      var backgroundImage = new Image();
+      backgroundImage.onload = function () {
+        // ctx.drawImage(backgroundImage, 0, 0, 1080, 1350);
+        ctx.drawImage(backgroundImage, 0, 0, 1200, 628);
+        var name = $(".name").val();
+        var number = currentCount;
+        var texts = [name, currentCount.toLocaleString()];
+        // portrait position
+        // var positions = [{
+        //         x: 520,
+        //         y: 550
+        //     },
+        //     {
+        //         x: 330,
+        //         y: 685
+        //     },
+        // ];
+        // landscape position
+        var positions = [
+          {
+            x: 580,
+            y: 277,
+          },
+          {
+            x: currentCount > 999 ? 725 : 710,
+            y: 318,
+          },
+        ];
+        ctx.fillStyle = "#7BEFA8";
+        ctx.textAlign = "center";
+        for (var i = 0; i < texts.length; i++) {
+          ctx.font = "bold 24px Oppo";
+          if (currentCount > 999) {
+            ctx.font = "bold 20px Oppo";
+          }
+          ctx.fillText(texts[i], positions[i].x, positions[i].y);
+        }
+
+        var dataURL = canvas.toDataURL("image/png");
+
+        var downloadLink = document.createElement("a");
+        downloadLink.href = dataURL;
+        downloadLink.download = name + ".png";
+        downloadLink.click();
+
+        canvas.toBlob(function (blob) {
+          var file = new File([blob], name + ".png", {
+            type: "image/png",
+          });
+          generatedImage = file;
+          console.log("file", generatedImage);
+          $(".form_generated_image").val(file);
+        });
+      };
+      backgroundImage.src =
+        "https://smilewithoppo.com/assets/images/certificate_landscape.jpg";
+    }
+  });
+</script>
