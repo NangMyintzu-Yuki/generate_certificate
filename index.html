@@ -143,11 +143,18 @@
 
     <div class="w-full bg-red-300 h-full mainContainer" id="mainContainer">
       
-      <button
+      <div class="items-center m-6 openDialogButton">
+        <img
+          src="https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
+          alit="Dancing"
+          width="160px"
+        />
+      </div>
+      <!-- <button
       class="openDialogButton m-24 transform -translate-x-1/2 -translate-y-1/2 bg-[#7BEFA7] text-black hover:bg-transparent hover:text-white text-sm border border-sm px-6 py-1 border-[#7BEFA7] hover:border-white rounded-2xl"
       >
       Join
-    </button>
+    </button> -->
     <canvas id="frame" width="1200" height="628" class="hidden"></canvas>
 
       <div
@@ -459,7 +466,6 @@
   $(".certificate").hide();
   $("#dialogContainer").hide();
   $(".show-image").hide();
-  $(".openDialogButton").hide();
 
   $(document).ready(function () {
     // var vpnOn = false;
@@ -521,7 +527,6 @@
     window.addEventListener("load", function () {
       //document.getElementById("loading").style.display = "none";
       document.getElementById("mainContainer").style.display = "block";
-      $(".openDialogButton").show("hidden");
     });
 
     var shareButton = document.getElementById("shareButton");
