@@ -618,12 +618,13 @@
 
     function postImageToFacebook(imageUrl, message) {
       var accessToken;
-      // FB.getLoginStatus(function (response) {
-      //   if (response.status === "connected") {
-      //     accessToken = response.authResponse.accessToken;
-      //     // Use accessToken for sharing or other actions
-      //   }
-      // });
+      FB.getLoginStatus(function (response) {
+        console.log('acc token',response);
+        if (response.status === "connected") {
+          accessToken = response.authResponse.accessToken;
+          // Use accessToken for sharing or other actions
+        }
+      });
       console.log("accessToken", accessToken);
       FB.api(
         "/me/photos",
@@ -631,6 +632,7 @@
         {
           url: imageUrl,
           caption: message,
+          access_token:accessToken,
           // access_token:'EAAWAGK3uZBRMBO2rYAbX9j8Bd30CbgYLakTv1JtiBZCCJ9EIdsKQpumizX7yKtn0tVJcZBY10HkXfjzOxhuxRvjBhp7NvZBmvmrKNVtUXdHB6dznmyzulAJYIIC7eXLZAaZAcfNnq6NazQWSmLZBMHe9D6yQ6tNGqlZBIHVbnzXi3PVDZBo7OZCrJIvZAIfv25KxZA4JRUVneCDZABMc90j0TTSptT9Q16Akow5YjrxaAPKZAO1Dv2ZBdgwGmzKB9wHAOP73QZDZD',
         },
         function (response) {
