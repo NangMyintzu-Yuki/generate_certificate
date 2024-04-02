@@ -712,9 +712,7 @@ function changeMetaImage(newImageUrl) {
           if (response && !response.error_message) {
             console.log("Shared successfully");
             window.location.href = websiteUrl; // Redirect to website after sharing
-          } else {
-            console.error("Error sharing:", response.error_message);
-          }
+          } 
         }
       );
 
