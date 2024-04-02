@@ -561,13 +561,6 @@
     var originalImage = "";
     var generatedImage = "";
 
-    $(document).on("click", ".choose", function () {
-      $("#dialogContainer").show();
-    });
-    $(document).on("click", ".share", function () {
-      $(".form_share").val(1);
-      $(".createForm").submit();
-    });
     $(document).on("change", ".beforeImage", function (e) {
       $(".chooseImage").removeClass("border border-red-400");
       changeImage(e);
@@ -641,56 +634,85 @@
       $(".saveCertificate").addClass("certificate_saved bg-black text-white");
     });
 
-    function postImageToFacebook(imageUrl, message) {
-      var accessToken;
-      FB.getLoginStatus(function (response) {
-        if (response.status === "connected") {
-          accessToken = response.authResponse.accessToken;
-          // Use accessToken for sharing or other actions
-        }
-      });
-      console.log("accessToken", accessToken);
-      FB.api(
-        "/me/photos",
-        "post",
-        {
-          url: imageUrl,
-          caption: message,
-          access_token: accessToken,
-        },
-        function (response) {
-          if (!response || response.error) {
-            console.error(
-              "Error occurred while posting image:",
-              response.error
-            );
-          } else {
-            console.log("Image posted successfully:", response);
-          }
-        }
-      );
+    // function postImageToFacebook(imageUrl, message) {
+    //   var accessToken;
+    //   FB.getLoginStatus(function (response) {
+    //     if (response.status === "connected") {
+    //       accessToken = response.authResponse.accessToken;
+    //       // Use accessToken for sharing or other actions
+    //     }
+    //   });
+    //   console.log("accessToken", accessToken);
+    //   FB.api(
+    //     "/me/photos",
+    //     "post",
+    //     {
+    //       url: imageUrl,
+    //       caption: message,
+    //       access_token: accessToken,
+    //     },
+    //     function (response) {
+    //       if (!response || response.error) {
+    //         console.error(
+    //           "Error occurred while posting image:",
+    //           response.error
+    //         );
+    //       } else {
+    //         console.log("Image posted successfully:", response);
+    //       }
+    //     }
+    //   );
+    // }
+
+    function updateMetaTagImage(imageUrl) {
+      var ogImageTag = document.querySelector('meta[property="og:image"]');
+      ogImageTag.setAttribute("content", imageUrl);
     }
 
     function shareOnFacebook() {
+      updateMetaTagImage(
+        "https://smilewithoppo.com/certificate/55_ctr_Test1.png"
+      );
+
       // var imgPath = res.generated_image.replace(/\s+/g, "");
       // var imageUrl = `https://smilewithoppo.com/certificate/${imgPath}`;
       // console.log('test',test)
-      //  var imageUrl = "https://smilewithoppo.com/certificate/55_ctr_Test1.png";
-      var imageUrl = "https://images.app.goo.gl/gjhiGr73BxTAHdwR8";
+      var imageUrl = "https://smilewithoppo.com/certificate/55_ctr_Test1.png";
+      // var imageUrl = "https://images.app.goo.gl/gjhiGr73BxTAHdwR8";
+
+      var websiteUrl = window.location.href
+      // var websiteUrl = "https://smilewithoppo.com/";
 
       FB.ui(
         {
           method: "share",
-          href: "https://smilewithoppo.com/",
-          hashtag: "#Two",
-          quote: "Check out this awesome website!",
+          href: websiteUrl,
           display: "popup",
           picture: imageUrl,
-          redirect_uri: "https://smilewithoppo.com/",
         },
-        function (response) {}
+        function (response) {
+          if (response && !response.error_message) {
+            console.log("Shared successfully");
+            window.location.href = websiteUrl; // Redirect to website after sharing
+          } else {
+            console.error("Error sharing:", response.error_message);
+          }
+        }
       );
-      postImageToFacebook(imageUrl, "Testing Two");
+
+      // FB.ui(
+      //   {
+      //     method: "share",
+      //     href: imageUrl,
+      //     hashtag: "#Two",
+      //     quote: "Check out this awesome website!",
+      //     display: "popup",
+      //     picture: imageUrl,
+      //     redirect_uri: "https://smilewithoppo.com/",
+      //   },
+      //   function (response) {}
+      // );
+      // postImageToFacebook(imageUrl, "Testing Two");
 
       // FB.ui(
       //   {
