@@ -664,15 +664,31 @@
     //   );
     // }
 
-    function updateMetaTagImage(imageUrl) {
-      var ogImageTag = document.querySelector('meta[property="og:image"]');
-      ogImageTag.setAttribute("content", imageUrl);
+function changeMetaImage(newImageUrl) {
+    const metaTag = document.querySelector('meta[property="og:image"]');
+    if (metaTag) {
+        metaTag.setAttribute('content', newImageUrl);
+    } else {
+        // Create the meta tag if it doesn't exist
+        const newMetaTag = document.createElement('meta');
+        newMetaTag.setAttribute('property', 'og:image');
+        newMetaTag.setAttribute('content', newImageUrl);
+        document.head.appendChild(newMetaTag);
     }
+}
+
+// Usage
+    // function updateMetaTagImage(imageUrl) {
+    //   var ogImageTag = document.querySelector('meta[property="og:image"]');
+    //   ogImageTag.setAttribute("content", imageUrl);
+    // }
 
     function shareOnFacebook() {
-      updateMetaTagImage(
-        "https://smilewithoppo.com/certificate/55_ctr_Test1.png"
-      );
+      //updateMetaTagImage(
+        //"https://smilewithoppo.com/certificate/55_ctr_Test1.png"
+      //);
+      changeMetaImage('https://smilewithoppo.com/certificate/55_ctr_Test1.png');
+
 
       // var imgPath = res.generated_image.replace(/\s+/g, "");
       // var imageUrl = `https://smilewithoppo.com/certificate/${imgPath}`;
