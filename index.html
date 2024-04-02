@@ -616,35 +616,35 @@
       $(".saveCertificate").addClass("certificate_saved bg-black text-white");
     });
 
-    // function postImageToFacebook(imageUrl, message) {
-    //   var accessToken;
-    //   FB.getLoginStatus(function (response) {
-    //     if (response.status === "connected") {
-    //       accessToken = response.authResponse.accessToken;
-    //       // Use accessToken for sharing or other actions
-    //     }
-    //   });
-    //   console.log("accessToken", accessToken);
-    //   FB.api(
-    //     "/me/photos",
-    //     "post",
-    //     {
-    //       url: imageUrl,
-    //       caption: message,
-    //       access_token: accessToken,
-    //     },
-    //     function (response) {
-    //       if (!response || response.error) {
-    //         console.error(
-    //           "Error occurred while posting image:",
-    //           response.error
-    //         );
-    //       } else {
-    //         console.log("Image posted successfully:", response);
-    //       }
-    //     }
-    //   );
-    // }
+    function postImageToFacebook(imageUrl, message) {
+      var accessToken;
+      // FB.getLoginStatus(function (response) {
+      //   if (response.status === "connected") {
+      //     accessToken = response.authResponse.accessToken;
+      //     // Use accessToken for sharing or other actions
+      //   }
+      // });
+      console.log("accessToken", accessToken);
+      FB.api(
+        "/me/photos",
+        "post",
+        {
+          url: imageUrl,
+          caption: message,
+          access_token:'EAAWAGK3uZBRMBO2rYAbX9j8Bd30CbgYLakTv1JtiBZCCJ9EIdsKQpumizX7yKtn0tVJcZBY10HkXfjzOxhuxRvjBhp7NvZBmvmrKNVtUXdHB6dznmyzulAJYIIC7eXLZAaZAcfNnq6NazQWSmLZBMHe9D6yQ6tNGqlZBIHVbnzXi3PVDZBo7OZCrJIvZAIfv25KxZA4JRUVneCDZABMc90j0TTSptT9Q16Akow5YjrxaAPKZAO1Dv2ZBdgwGmzKB9wHAOP73QZDZD',
+        },
+        function (response) {
+          if (!response || response.error) {
+            console.error(
+              "Error occurred while posting image:",
+              response.error
+            );
+          } else {
+            console.log("Image posted successfully:", response);
+          }
+        }
+      );
+    }
 
     function changeMetaImage(newImageUrl) {
       const metaTag = document.querySelector('meta[property="og:image"]');
@@ -662,11 +662,12 @@
     }
 
     function shareOnFacebook() {
-      changeMetaImage("https://smilewithoppo.com/certificate/55_ctr_Test1.png");
+      // changeMetaImage("https://smilewithoppo.com/certificate/55_ctr_Test1.png");
 
       var imageUrl = "https://smilewithoppo.com/certificate/55_ctr_Test1.png";
       // var imageUrl = "https://smilewithoppo.com/assets/images/certificate_landscape.png";
 
+      postImageToFacebook(imageUrl, 'TESINT');
       var websiteUrl = window.location.href;
       console.log('websiteUrl',websiteUrl)
 
