@@ -719,6 +719,7 @@ function changeMetaImage(newImageUrl) {
           href: imageUrl,
         },
         function (response) {
+          console.log('res',response)
           if (response && !response.error_message) {
           } else {
           }
