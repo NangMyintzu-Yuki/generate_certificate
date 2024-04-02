@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- <meta
-      property="og:image"
-      content="https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
-      id="ogImage"
-    /> -->
+  
 
     <meta property="og:type" content="website" />
     <meta property="og:image:width" content="1200" />
@@ -136,18 +132,7 @@
     class="font-sans antialiased bg-gray-300 w-screen p-0 m-0 h-screen overflow-hidden"
     id="content"
   >
-    <!-- <div
-      id="loading"
-      class="h-full w-full font-sans bg-[#7BEFA7] flex text-center items-center justify-center w-full h-full m-0 p-0 overflow-hidden loadingScreen"
-    >
-      <div class="items-center">
-        <img
-          src="https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
-          alit="Dancing"
-          width="160px"
-        />
-      </div>
-    </div> -->
+    
 
     <div class="w-full bg-red-300 h-full mainContainer" id="mainContainer">
       <div class="items-center m-6 openDialogButton">
@@ -686,10 +671,8 @@ function changeMetaImage(newImageUrl) {
     // }
 
     function shareOnFacebook() {
-      //updateMetaTagImage(
-        //"https://smilewithoppo.com/certificate/55_ctr_Test1.png"
-      //);
-      changeMetaImage('https://smilewithoppo.com/certificate/55_ctr_Test1.png');
+   
+      // changeMetaImage('https://smilewithoppo.com/certificate/55_ctr_Test1.png');
 
 
       // var imgPath = res.generated_image.replace(/\s+/g, "");
@@ -701,20 +684,20 @@ function changeMetaImage(newImageUrl) {
       var websiteUrl = window.location.href
       // var websiteUrl = "https://smilewithoppo.com/";
 
-      FB.ui(
-        {
-          method: "share",
-          href: websiteUrl,
-          display: "popup",
-          picture: imageUrl,
-        },
-        function (response) {
-          if (response && !response.error_message) {
-            console.log("Shared successfully");
-            window.location.href = websiteUrl; // Redirect to website after sharing
-          } 
-        }
-      );
+      // FB.ui(
+      //   {
+      //     method: "share",
+      //     href: websiteUrl,
+      //     display: "popup",
+      //     picture: imageUrl,
+      //   },
+      //   function (response) {
+      //     if (response && !response.error_message) {
+      //       console.log("Shared successfully");
+      //       window.location.href = websiteUrl; 
+      //     } 
+      //   }
+      // );
 
       // FB.ui(
       //   {
@@ -730,16 +713,16 @@ function changeMetaImage(newImageUrl) {
       // );
       // postImageToFacebook(imageUrl, "Testing Two");
 
-      // FB.ui(
-      //   {
-      //     method: "share",
-      //     href: imageUrl,
-      //   },
-      //   function (response) {
-      //     if (response && !response.error_message) {
-      //     } else {
-      //     }
-      //   } );
+      FB.ui(
+        {
+          method: "share",
+          href: imageUrl,
+        },
+        function (response) {
+          if (response && !response.error_message) {
+          } else {
+          }
+        } );
 
       // var imageUrl = "https://smilewithoppo.com/certificate/55_ctr_Test1.png";
       // var currentUrl = window.location.href;
