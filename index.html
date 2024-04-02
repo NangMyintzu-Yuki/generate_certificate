@@ -56,6 +56,14 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0&appId=1548218369243411&autoLogAppEvents=1"
+      nonce="T04heG4c"
+    ></script>
   </head>
   <style type="text/css">
     body {
@@ -142,7 +150,6 @@
     </div> -->
 
     <div class="w-full bg-red-300 h-full mainContainer" id="mainContainer">
-      
       <div class="items-center m-6 openDialogButton">
         <img
           src="https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
@@ -155,7 +162,7 @@
       >
       Join
     </button> -->
-    <canvas id="frame" width="1200" height="628" class="hidden"></canvas>
+      <canvas id="frame" width="1200" height="628" class="hidden"></canvas>
 
       <div
         id="dialogContainer"
@@ -444,7 +451,6 @@
           </div>
         </div>
       </div>
-      
     </div>
   </body>
 </html>
@@ -467,61 +473,82 @@
   $("#dialogContainer").hide();
   $(".show-image").hide();
 
+  window.fbAsyncInit = function () {
+    FB.init({
+      appId: "1548218369243411",
+      xfbml: true,
+      version: "v19.0",
+    });
+  };
+
+  (function (d, s, id) {
+    var js,
+      fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {
+      return;
+    }
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  })(document, "script", "facebook-jssdk");
+
   $(document).ready(function () {
     var vpnOn = false;
-    var confirmButton;
 
-    async function checkIPAddress() {
-        try {
-            const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
-            const data = await response.json();
-            console.log('Country:', data.country);
-            if (data.country === 'MM') {
-                console.log('Open VPN');
-                Swal.fire({
-                    title: 'Please Open VPN!',
-                    icon: 'warning',
-                    confirmButtonText: 'OK',
-                    showCancelButton: false,
-                    allowOutsideClick: () => false,
-                    didOpen: () => {
-                        confirmButton = Swal.getConfirmButton();
-                        confirmButton.disabled = true;
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        console.log('OK button clicked');
-                    }
-                });
-            } else {
-                console.log('OK');
-                updateVPNStatus(); // Call updateVPNStatus when the country is not Myanmar
-            }
-        } catch (error) {
-            console.error('Error checking IP address:', error);
-        }
-    }
+    //var confirmButton;
 
-    async function updateVPNStatus() {
-        try {
-            const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
-            const data = await response.json();
-            if (data.country === 'MM') {
-                console.log('Country is still Myanmar, waiting...');
-            } else {
-                vpnOn = true;
-                // if (vpnOn == false) {
-                    confirmButton = Swal.getConfirmButton();
-                    confirmButton.disabled = false;
-                // }
-            }
-        } catch (error) {
-            console.error('Error updating VPN status:', error);
-        }
-    }
+    // async function checkIPAddress() {
+    //     try {
+    //         const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
+    //         const data = await response.json();
+    //         console.log('Country:', data);
+    //         if (data.country === 'MM') {
+    //             console.log('Open VPN');
+    //             Swal.fire({
+    //                 title: 'Please Open VPN!',
+    //                 icon: 'warning',
+    //                 confirmButtonText: 'OK',
+    //                 showCancelButton: false,
+    //                 allowOutsideClick: () => false,
+    //                 didOpen: () => {
+    //                     confirmButton = Swal.getConfirmButton();
+    //                     confirmButton.disabled = true;
+    //                 }
+    //             }).then((result) => {
+    //                 if (result.isConfirmed) {
+    //                     console.log('OK button clicked');
+    //                 }
+    //             });
+    //         } else {
+    //             console.log('OK');
+    //             updateVPNStatus();
+    //         }
+    //     } catch (error) {
+    //         console.error('Error checking IP address:', error);
+    //     }
+    // }
 
-    const intervalId = setInterval(updateVPNStatus, 5000);
-    checkIPAddress();
+    // async function updateVPNStatus() {
+    //     try {
+    //         const response = await fetch('https://ipinfo.io?token=3b642ccfb1327a');
+    //         const data = await response.json();
+    //         if (data.country === 'MM') {
+    //             console.log('Country is still Myanmar, waiting...');
+    //         } else {
+    //             vpnOn = true;
+    //             // if (vpnOn == false) {
+    //                 confirmButton = Swal.getConfirmButton();
+    //                 confirmButton.disabled = false;
+    //             // }
+    //         }
+    //     } catch (error) {
+    //         console.error('Error updating VPN status:', error);
+    //     }
+    // }
+
+    // const intervalId = setInterval(updateVPNStatus, 5000);
+    // checkIPAddress();
 
     var path;
     window.addEventListener("load", function () {
@@ -561,7 +588,8 @@
       shareOnFacebook();
     });
     $(document).on("click", ".openDialogButton", function () {
-      $("#dialogContainer").show();
+      // $("#dialogContainer").show();
+      shareOnFacebook();
     });
     $(document).on("click", "#closeDialogButton", function () {
       $("#dialogContainer").hide();
@@ -613,42 +641,83 @@
       $(".saveCertificate").addClass("certificate_saved bg-black text-white");
     });
 
-    function shareOnFacebook() {
-      var imageUrl = "https://smilewithoppo.com/certificate/55_ctr_Test1.png";
-      var currentUrl = window.location.href;
-      document.getElementById("ogImage").setAttribute("content", imageUrl);
-      window.open(
-        "http://www.facebook.com/sharer.php?u=" +
-          encodeURIComponent(imageUrl) +
-          "&picture=" +
-          encodeURIComponent(imageUrl) +
-          "&t=" +
-          encodeURIComponent("title"),
-        "sharer",
-        "toolbar=0,status=0,width=626,height=436"
+    function postImageToFacebook(imageUrl, message) {
+      var accessToken;
+      FB.getLoginStatus(function (response) {
+        if (response.status === "connected") {
+          accessToken = response.authResponse.accessToken;
+          // Use accessToken for sharing or other actions
+        }
+      });
+      console.log("accessToken", accessToken);
+      FB.api(
+        "/me/photos",
+        "post",
+        {
+          url: imageUrl,
+          caption: message,
+          access_token: accessToken,
+        },
+        function (response) {
+          if (!response || response.error) {
+            console.error(
+              "Error occurred while posting image:",
+              response.error
+            );
+          } else {
+            console.log("Image posted successfully:", response);
+          }
+        }
       );
-      return false;
     }
-    // share a link
-    // function shareOnFacebook() {
-    //     var imageUrl = "https://smilewithoppo.com/assets/images/certificate_landscape.jpg"
-    //     if (path.length > 2) {
-    //         path = path.replace(/\s+/g, '');
-    //         imageUrl = `https://smilewithoppo.com/certificate/${path}`;
-    //     }
-    //     console.log('image', imageUrl)
 
-    //     // var shareURL = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(imageUrl);
-    //     // window.open(shareURL, '_blank');
+    function shareOnFacebook() {
+      // var imgPath = res.generated_image.replace(/\s+/g, "");
+      // var imageUrl = `https://smilewithoppo.com/certificate/${imgPath}`;
+      // console.log('test',test)
+      //  var imageUrl = "https://smilewithoppo.com/certificate/55_ctr_Test1.png";
+      var imageUrl = "https://images.app.goo.gl/gjhiGr73BxTAHdwR8";
 
-    //     var shareURL = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(imageUrl);
-    //     var link = document.createElement('a');
-    //     link.href = shareURL;
-    //     link.target = '_blank';
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     document.body.removeChild(link);
-    // }
+      FB.ui(
+        {
+          method: "share",
+          href: "https://smilewithoppo.com/",
+          hashtag: "#Two",
+          quote: "Check out this awesome website!",
+          display: "popup",
+          picture: imageUrl,
+          redirect_uri: "https://smilewithoppo.com/",
+        },
+        function (response) {}
+      );
+      postImageToFacebook(imageUrl, "Testing Two");
+
+      // FB.ui(
+      //   {
+      //     method: "share",
+      //     href: imageUrl,
+      //   },
+      //   function (response) {
+      //     if (response && !response.error_message) {
+      //     } else {
+      //     }
+      //   } );
+
+      // var imageUrl = "https://smilewithoppo.com/certificate/55_ctr_Test1.png";
+      // var currentUrl = window.location.href;
+      // document.getElementById("ogImage").setAttribute("content", imageUrl);
+      // window.open(
+      //   "http://www.facebook.com/sharer.php?u=" +
+      //     encodeURIComponent(imageUrl) +
+      //     "&picture=" +
+      //     encodeURIComponent(imageUrl) +
+      //     "&t=" +
+      //     encodeURIComponent("title"),
+      //   "sharer",
+      //   "toolbar=0,status=0,width=626,height=436"
+      // );
+      // return false;
+    }
 
     // not change meta image
     // function shareOnFacebook() {
